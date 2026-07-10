@@ -1,9 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* ===========================
    DevAxis — Global Styles
    Minimal reset + custom properties
-   Tailwind utilities loaded via CDN
    =========================== */
-
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;

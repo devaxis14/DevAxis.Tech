@@ -172,29 +172,6 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
           rel="stylesheet"
         />
-        {/* Tailwind CSS via CDN */}
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              tailwind.config = {
-                theme: {
-                  extend: {
-                    colors: {
-                      navy: { DEFAULT: '#0A1628', light: '#132038', mid: '#1A2A45' },
-                      coral: { DEFAULT: '#E8553A', hover: '#D14A32' },
-                      warm: { white: '#FAFAF8', gray50: '#F5F5F3', gray100: '#E8E8E5' },
-                    },
-                    fontFamily: {
-                      sans: ['Inter', 'sans-serif'],
-                      heading: ['Outfit', 'sans-serif'],
-                    },
-                  },
-                },
-              }
-            `,
-          }}
-        />
         {/* JSON-LD Structured Data */}
         <script
           type="application/ld+json"
