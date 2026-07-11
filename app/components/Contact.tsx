@@ -5,9 +5,9 @@ import { useState, FormEvent } from "react";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 
 const DEFAULT_CONTACT = {
-  phone: "+91 98765 43210",
-  email: "hello@devaxis.in",
-  whatsappNumber: "919876543210",
+  phone: "+91 8590184265",
+  email: "devaxis.technology@gmail.com",
+  whatsappNumber: "918590184265",
   whatsappMessage: "Hi DevAxis, I'm interested in your web design services.",
   address: {
     line1: "2nd Floor, Skyline Tower,",

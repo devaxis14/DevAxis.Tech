@@ -7,13 +7,14 @@ const DEFAULT_FOOTER = {
     instagram: "https://www.instagram.com/devaxis",
     linkedin: "https://www.linkedin.com/company/devaxis",
     twitter: "https://twitter.com/devaxis",
+    whatsapp: "https://wa.me/918590184265?text=Hi%20DevAxis%2C%20I'm%20interested%20in%20your%20web%20design%20services."
   },
 };
 
 const DEFAULT_CONTACT = {
-  phone: "+91 98765 43210",
-  email: "hello@devaxis.in",
-  whatsappNumber: "919876543210",
+  phone: "+91 8590184265",
+  email: "devaxis.technology@gmail.com",
+  whatsappNumber: "918590184265",
   whatsappMessage: "Hi DevAxis, I'm interested in your web design services.",
   address: {
     line1: "2nd Floor, Skyline Tower,",
@@ -55,9 +56,9 @@ const SOCIAL_ICONS = {
       <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
     </svg>
   ),
-  twitter: (
+  whatsapp: (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+      <path d="M20.52 3.48A11.92 11.92 0 0012 .5a11.92 11.92 0 00-8.52 3.48A11.92 11.92 0 000 12c0 2.1.55 4.13 1.59 5.93L0 24l6.07-1.59A11.86 11.86 0 0012 23.5a11.92 11.92 0 008.52-3.48A11.92 11.92 0 0024 12a11.92 11.92 0 00-3.48-8.52zM12 21.5a9.46 9.46 0 01-4.84-1.33l-.34-.21-3.6.94.96-3.5-.23-.36a9.46 9.46 0 01-1.45-5.06c0-5.23 4.27-9.5 9.5-9.5S21.5 6.77 21.5 12 17.23 21.5 12 21.5m5.71-7.91c-.18-.09-.86-.42-1-.47-.14-.04-.24-.06-.34.09-.11.15-.41.47-.5.56-.09.09-.18.1-.36.02-.18-.08-.77-.26-1.46-.81-.54-.38-.91-.85-1.02-1.04-.11-.18-.01-.27.08-.36.08-.08.18-.21.27-.31.09-.1.12-.18.18-.3.06-.12.03-.23-.01-.33-.04-.1-.5-1.21-.68-1.66-.18-.44-.36-.38-.5-.38h-.42c-.14 0-.37.05-.57.24-.2.19-.78.77-.78 1.89s.8 2.2.91 2.36c.11.16 1.57 2.4 3.81 3.36.53.23  .94.37 1.26.48.53.17 1.01.15 1.39.09.42-.07 1.27-.52 1.45-1.02.18-.5.18-.93.13-1.02-.05-.09-.18-.14-.36-.24z"/>
     </svg>
   ),
 };
@@ -224,7 +225,7 @@ export default function Footer({ data, contactInfo }: FooterProps) {
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-lg bg-white/5 hover:bg-coral flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200 border border-white/10"
+                    className="w-10 h-10 rounded-lg bg-white/5 hover:bg-coral flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200 border border-white/10 cursor-pointer z-10"
                     aria-label={`Visit our ${platform} page`}
                   >
                     {SOCIAL_ICONS[platform as keyof typeof SOCIAL_ICONS]}
