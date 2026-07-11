@@ -2,9 +2,26 @@
 
 import { useState, useEffect, FormEvent } from "react";
 import { getToken } from "@/app/lib/auth";
-import { Loader2, Plus, Edit2, Trash2, X, Save } from "lucide-react";
+import { 
+  Loader2, Plus, Edit2, Trash2, X, Save,
+  Monitor, Smartphone, Code, Paintbrush, Globe, Server, Database, Search, Zap, Layout
+} from "lucide-react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+
+// Map of available icons for the user to choose from
+const ICON_MAP: Record<string, React.ElementType> = {
+  Monitor,
+  Smartphone,
+  Code,
+  Paintbrush,
+  Globe,
+  Server,
+  Database,
+  Search,
+  Zap,
+  Layout
+};
 
 interface Service {
   _id: string;
@@ -24,7 +41,7 @@ export default function ServicesEditor() {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    icon: "",
+    icon: "Monitor", // Default icon
     features: [] as string[],
   });
   
@@ -53,12 +70,12 @@ export default function ServicesEditor() {
       setFormData({
         title: service.title,
         description: service.description,
-        icon: service.icon,
+        icon: service.icon && ICON_MAP[service.icon] ? service.icon : "Monitor",
         features: service.features || [],
       });
     } else {
       setEditingId(null);
-      setFormData({ title: "", description: "", icon: "", features: [] });
+      setFormData({ title: "", description: "", icon: "Monitor", features: [] });
     }
     setError("");
     setIsModalOpen(true);
@@ -154,19 +171,22 @@ export default function ServicesEditor() {
           <p className="text-gray-500 text-center py-8">No services found. Add your first service!</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map(service => (
-              <div key={service._id} className="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow">
-                <div className="w-10 h-10 bg-navy/5 rounded-lg flex items-center justify-center text-xl mb-4">
-                  {service.icon || "✨"}
+            {services.map(service => {
+              const IconComponent = ICON_MAP[service.icon] || Monitor;
+              return (
+                <div key={service._id} className="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow">
+                  <div className="w-12 h-12 bg-navy/5 text-coral rounded-lg flex items-center justify-center mb-4">
+                    <IconComponent size={24} />
+                  </div>
+                  <h3 className="font-bold text-navy text-lg mb-2">{service.title}</h3>
+                  <p className="text-sm text-gray-500 line-clamp-2 mb-4">{service.description}</p>
+                  <div className="flex justify-end gap-2 pt-4 border-t border-gray-100">
+                    <button onClick={() => handleOpenModal(service)} className="p-2 text-gray-500 hover:text-navy hover:bg-gray-100 rounded-md"><Edit2 size={16} /></button>
+                    <button onClick={() => handleDelete(service._id)} className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-md"><Trash2 size={16} /></button>
+                  </div>
                 </div>
-                <h3 className="font-bold text-navy text-lg mb-2">{service.title}</h3>
-                <p className="text-sm text-gray-500 line-clamp-2 mb-4">{service.description}</p>
-                <div className="flex justify-end gap-2 pt-4 border-t border-gray-100">
-                  <button onClick={() => handleOpenModal(service)} className="p-2 text-gray-500 hover:text-navy hover:bg-gray-100 rounded-md"><Edit2 size={16} /></button>
-                  <button onClick={() => handleDelete(service._id)} className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-md"><Trash2 size={16} /></button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
@@ -185,8 +205,17 @@ export default function ServicesEditor() {
                   <input required type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Icon (Emoji/Text)</label>
-                  <input required type="text" value={formData.icon} onChange={e => setFormData({...formData, icon: e.target.value})} className="w-full px-4 py-2 border rounded-lg" placeholder="💻" />
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Icon</label>
+                  <select
+                    required
+                    value={formData.icon}
+                    onChange={e => setFormData({...formData, icon: e.target.value})}
+                    className="w-full px-4 py-2.5 border rounded-lg bg-white"
+                  >
+                    {Object.keys(ICON_MAP).map(key => (
+                      <option key={key} value={key}>{key}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
               <div>
@@ -206,15 +235,16 @@ export default function ServicesEditor() {
                       <button type="button" onClick={() => removeFeature(idx)} className="text-red-500 p-2"><Trash2 size={16}/></button>
                     </div>
                   ))}
+                  {formData.features.length === 0 && <p className="text-sm text-gray-400 italic">No features added yet.</p>}
                 </div>
               </div>
 
               {error && <p className="text-red-600 text-sm">{error}</p>}
               
-              <div className="flex justify-end gap-3 pt-4 border-t">
+              <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
                 <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg">Cancel</button>
-                <button type="submit" disabled={saving} className="px-6 py-2 bg-coral text-white font-medium rounded-lg flex items-center gap-2">
-                  {saving ? <Loader2 className="animate-spin" size={16} /> : <Save size={16} />} Save
+                <button type="submit" disabled={saving} className="px-6 py-2 bg-coral hover:bg-coral-hover text-white font-medium rounded-lg flex items-center gap-2">
+                  {saving ? <Loader2 className="animate-spin" size={16} /> : <Save size={16} />} Save Service
                 </button>
               </div>
             </form>
