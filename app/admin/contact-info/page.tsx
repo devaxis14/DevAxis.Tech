@@ -31,7 +31,7 @@ export default function ContactInfoEditor() {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/content/contact`);
+        const res = await fetch(`${API_URL}/api/content/contactInfo`);
         const data = await res.json();
         
         if (data.data) {
@@ -55,7 +55,7 @@ export default function ContactInfoEditor() {
 
     try {
       const token = getToken();
-      const res = await fetch(`${API_URL}/api/content/contact`, {
+      const res = await fetch(`${API_URL}/api/content/contactInfo`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

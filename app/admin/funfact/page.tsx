@@ -21,7 +21,7 @@ export default function FunFactEditor() {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/content/funfact`);
+        const res = await fetch(`${API_URL}/api/content/funFact`);
         const data = await res.json();
         
         if (data.data) {
@@ -49,7 +49,7 @@ export default function FunFactEditor() {
 
     try {
       const token = getToken();
-      const res = await fetch(`${API_URL}/api/content/funfact`, {
+      const res = await fetch(`${API_URL}/api/content/funFact`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
