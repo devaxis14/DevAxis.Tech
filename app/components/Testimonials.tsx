@@ -1,3 +1,10 @@
+"use client";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+
 const DEFAULT_TESTIMONIALS = [
   {
     _id: "default-1",
@@ -23,9 +30,17 @@ const DEFAULT_TESTIMONIALS = [
     rating: 5,
     initials: "AK",
   },
+  {
+    _id: "default-4",
+    name: "Arun Thomas",
+    role: "Marketing Head, TechFlow",
+    quote: "The SEO strategies implemented by DevAxis put us on the first page of Google within a few months. Their team is highly responsive and delivers measurable results.",
+    rating: 5,
+    initials: "AT",
+  }
 ];
 
-const BG_COLORS = ["bg-navy", "bg-coral", "bg-navy-mid"];
+const BG_COLORS = ["bg-navy", "bg-coral", "bg-navy-mid", "bg-teal-600"];
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -63,7 +78,7 @@ export default function Testimonials({ data }: TestimonialsProps) {
   const testimonials = data?.length ? data : DEFAULT_TESTIMONIALS;
 
   return (
-    <section id="testimonials" className="py-16 sm:py-20 lg:py-24 bg-white">
+    <section id="testimonials" className="py-16 sm:py-20 lg:py-24 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
@@ -84,50 +99,60 @@ export default function Testimonials({ data }: TestimonialsProps) {
           </p>
         </div>
 
-        {/* Testimonials grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7">
+        {/* Testimonials carousel */}
+        <Swiper
+          modules={[Pagination, Autoplay]}
+          spaceBetween={28}
+          slidesPerView={1}
+          breakpoints={{
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+          }}
+          pagination={{ clickable: true, dynamicBullets: true }}
+          autoplay={{ delay: 5000, disableOnInteraction: false }}
+          className="pb-16 !overflow-visible"
+        >
           {testimonials.map((testimonial, i) => (
-            <div
-              key={testimonial._id}
-              className="bg-warm-gray50 rounded-xl p-6 sm:p-7 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col"
-            >
-              {/* Quote icon */}
-              <svg
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="#E8553A"
-                className="opacity-20 mb-4"
-                aria-hidden="true"
-              >
-                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151C7.546 6.068 5.983 8.789 5.983 11h4v10H0z" />
-              </svg>
-
-              {/* Stars */}
-              <StarRating rating={testimonial.rating} />
-
-              {/* Quote */}
-              <blockquote className="mt-4 text-sm sm:text-base text-gray-600 leading-relaxed flex-1">
-                &ldquo;{testimonial.quote}&rdquo;
-              </blockquote>
-
-              {/* Author */}
-              <div className="mt-6 flex items-center gap-3 pt-5 border-t border-gray-200">
-                <div
-                  className={`w-11 h-11 rounded-full ${BG_COLORS[i % BG_COLORS.length]} flex items-center justify-center text-white font-heading font-bold text-sm flex-shrink-0`}
+            <SwiperSlide key={testimonial._id} className="h-auto">
+              <div className="bg-warm-gray50 rounded-xl p-6 sm:p-7 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col h-full">
+                {/* Quote icon */}
+                <svg
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  fill="#E8553A"
+                  className="opacity-20 mb-4"
+                  aria-hidden="true"
                 >
-                  {testimonial.initials}
-                </div>
-                <div>
-                  <p className="font-heading font-semibold text-navy text-sm">
-                    {testimonial.name}
-                  </p>
-                  <p className="text-xs text-gray-500">{testimonial.role}</p>
+                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151C7.546 6.068 5.983 8.789 5.983 11h4v10H0z" />
+                </svg>
+
+                {/* Stars */}
+                <StarRating rating={testimonial.rating} />
+
+                {/* Quote */}
+                <blockquote className="mt-4 text-sm sm:text-base text-gray-600 leading-relaxed flex-1">
+                  &ldquo;{testimonial.quote}&rdquo;
+                </blockquote>
+
+                {/* Author */}
+                <div className="mt-6 flex items-center gap-3 pt-5 border-t border-gray-200">
+                  <div
+                    className={`w-11 h-11 rounded-full ${BG_COLORS[i % BG_COLORS.length]} flex items-center justify-center text-white font-heading font-bold text-sm flex-shrink-0`}
+                  >
+                    {testimonial.initials}
+                  </div>
+                  <div>
+                    <p className="font-heading font-semibold text-navy text-sm">
+                      {testimonial.name}
+                    </p>
+                    <p className="text-xs text-gray-500">{testimonial.role}</p>
+                  </div>
                 </div>
               </div>
-            </div>
+            </SwiperSlide>
           ))}
-        </div>
+        </Swiper>
 
         {/* Google review badge */}
         <div className="mt-10 sm:mt-14 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
