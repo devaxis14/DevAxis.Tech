@@ -35,6 +35,7 @@ export default function ImageUploader({
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [isCropping, setIsCropping] = useState(false);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onCropComplete = useCallback((croppedArea: any, croppedAreaPixels: any) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);

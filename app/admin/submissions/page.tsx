@@ -83,7 +83,7 @@ export default function SubmissionsPage() {
       <div className="px-6 py-5 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
         <div>
           <h2 className="text-lg font-bold text-navy">Contact Submissions</h2>
-          <p className="text-sm text-gray-500 mt-1">Inquiries from your website's contact form.</p>
+          <p className="text-sm text-gray-500 mt-1">Inquiries from your website&apos;s contact form.</p>
         </div>
         <div className="text-sm font-medium text-coral bg-coral/10 px-3 py-1 rounded-full">
           {submissions.filter(s => !s.isRead).length} Unread

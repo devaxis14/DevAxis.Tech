@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { getToken } from "@/app/lib/auth";
-import { Loader2, Trash2, CheckCircle, XCircle } from "lucide-react";
-import ImageUploader from "../components/ImageUploader";
+import { Loader2, Trash2, CheckCircle } from "lucide-react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 
@@ -111,7 +110,7 @@ export default function TestimonialsEditor() {
                       <h3 className="font-bold text-navy">{item.name}</h3>
                       <p className="text-xs text-gray-500 mb-2">{item.position} at {item.company}</p>
                       <div className="text-coral text-sm mb-3">{"★".repeat(item.rating)}{"☆".repeat(5-item.rating)}</div>
-                      <p className="text-sm text-gray-700 italic">"{item.content}"</p>
+                      <p className="text-sm text-gray-700 italic">&ldquo;{item.content}&rdquo;</p>
                     </div>
                     
                     <div className="flex gap-2 items-center shrink-0">

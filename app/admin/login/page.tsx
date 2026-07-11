@@ -2,7 +2,6 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { setToken } from "@/app/lib/auth";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";

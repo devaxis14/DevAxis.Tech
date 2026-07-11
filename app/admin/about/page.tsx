@@ -78,22 +78,23 @@ export default function AboutEditor() {
   };
 
   // Generic array updaters
-  const addArrayItem = (field: keyof typeof formData, defaultObj: any) => {
+  const addArrayItem = (field: keyof typeof formData, defaultObj: Record<string, unknown> | string) => {
     setFormData((prev) => ({
       ...prev,
-      [field]: [...(prev[field] as any[]), defaultObj],
+      [field]: [...(prev[field] as unknown[]), defaultObj],
     }));
   };
 
   const removeArrayItem = (field: keyof typeof formData, index: number) => {
     setFormData((prev) => ({
       ...prev,
-      [field]: (prev[field] as any[]).filter((_, i) => i !== index),
+      [field]: (prev[field] as unknown[]).filter((_, i) => i !== index),
     }));
   };
 
   const updateArrayItem = (field: keyof typeof formData, index: number, subfield: string | null, value: string) => {
     setFormData((prev) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const newArray = [...(prev[field] as any[])];
       if (subfield) {
         newArray[index][subfield] = value;
