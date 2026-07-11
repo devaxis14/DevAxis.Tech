@@ -104,7 +104,10 @@ export default function PortfolioEditor() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Failed to save item");
+      if (!res.ok) {
+        const errorMsg = data.errors ? data.errors.join(", ") : data.message;
+        throw new Error(errorMsg || "Failed to save item");
+      }
 
       await fetchPortfolio();
       setIsModalOpen(false);

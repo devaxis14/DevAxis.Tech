@@ -12,7 +12,7 @@ const portfolioSchema = new mongoose.Schema(
       type: String,
       required: [true, "Category is required"],
       trim: true,
-      maxlength: 50,
+      maxlength: 100,
     },
     description: {
       type: String,
@@ -23,6 +23,11 @@ const portfolioSchema = new mongoose.Schema(
     image: {
       type: String,
       default: null, // Cloudinary URL — null means use default
+    },
+    link: {
+      type: String,
+      trim: true,
+      default: "",
     },
     alt: {
       type: String,
