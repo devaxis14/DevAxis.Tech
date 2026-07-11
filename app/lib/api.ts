@@ -103,6 +103,7 @@ export async function getPortfolio() {
       category: string;
       description: string;
       image: string | null;
+      link: string;
       alt: string;
       order: number;
     }[]
@@ -130,11 +131,13 @@ export async function getTestimonials() {
  */
 export async function getSeoSettings() {
   return fetchAPI<{
-    pageTitle: string;
-    metaDescription: string;
-    keywords: string[];
+    siteName: string;
+    canonicalUrl: string;
+    defaultTitle: string;
+    titleTemplate: string;
+    defaultDescription: string;
+    defaultKeywords: string;
+    googleSiteVerification: string;
     ogImage: string | null;
-    siteUrl: string;
-    companyName: string;
   }>("/seo");
 }
