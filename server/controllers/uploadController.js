@@ -32,8 +32,8 @@ const uploadToCloudinary = (fileBuffer, options = {}) => {
       {
         folder: "devaxis",
         resource_type: "image",
-        quality: "auto:best",
-        fetch_format: "auto",
+        quality: "auto:good",
+        format: "webp",
         ...options,
       },
       (error, result) => {

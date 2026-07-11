@@ -158,6 +158,7 @@ export default function HeroEditor() {
                 recommendedSize="1920x1080px"
                 value={formData.backgroundImage}
                 onChange={handleImageChange}
+                disableCrop={true}
               />
             </div>
           </div>
