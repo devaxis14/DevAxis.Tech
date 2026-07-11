@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, FormEvent } from "react";
+import ImageUploader from "../components/ImageUploader";
 import { getToken } from "@/app/lib/auth";
 import { 
   Loader2, Plus, Edit2, Trash2, X, Save,
@@ -28,6 +29,7 @@ interface Service {
   title: string;
   description: string;
   icon: string;
+  image: string | null;
   features: string[];
 }
 
@@ -42,6 +44,7 @@ export default function ServicesEditor() {
     title: "",
     description: "",
     icon: "Monitor", // Default icon
+    image: "", // Cloudinary URL
     features: [] as string[],
   });
   
@@ -71,11 +74,12 @@ export default function ServicesEditor() {
         title: service.title,
         description: service.description,
         icon: service.icon && ICON_MAP[service.icon] ? service.icon : "Monitor",
+        image: service.image || "",
         features: service.features || [],
       });
     } else {
       setEditingId(null);
-      setFormData({ title: "", description: "", icon: "Monitor", features: [] });
+      setFormData({ title: "", description: "", icon: "Monitor", image: "", features: [] });
     }
     setError("");
     setIsModalOpen(true);
@@ -147,6 +151,10 @@ export default function ServicesEditor() {
     setFormData(prev => ({ ...prev, features: prev.features.filter((_, i) => i !== index) }));
   };
 
+  const handleImageChange = (url: string | null) => {
+    setFormData((prev) => ({ ...prev, image: url || "" }));
+  };
+
   if (loading) {
     return <div className="flex justify-center h-64 items-center"><Loader2 className="animate-spin text-coral" size={48} /></div>;
   }
@@ -175,6 +183,11 @@ export default function ServicesEditor() {
               const IconComponent = ICON_MAP[service.icon] || Monitor;
               return (
                 <div key={service._id} className="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow">
+                  {service.image && (
+                    <div className="w-full h-32 mb-4 bg-gray-100 rounded-md overflow-hidden relative">
+                      <img src={service.image} alt={service.title} className="w-full h-full object-cover" />
+                    </div>
+                  )}
                   <div className="w-12 h-12 bg-navy/5 text-coral rounded-lg flex items-center justify-center mb-4">
                     <IconComponent size={24} />
                   </div>
@@ -223,6 +236,15 @@ export default function ServicesEditor() {
                 <textarea required rows={3} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
               </div>
               
+              <div>
+                <ImageUploader 
+                  label="Cover Image (Optional)"
+                  recommendedSize="600x800px"
+                  value={formData.image}
+                  onChange={handleImageChange}
+                />
+              </div>
+
               <div>
                 <div className="flex justify-between items-center mb-2">
                   <label className="block text-sm font-medium text-gray-700">Features</label>

@@ -18,6 +18,14 @@ const serviceSchema = new mongoose.Schema(
       type: String,
       default: null, // Cloudinary URL — null means use default
     },
+    icon: {
+      type: String,
+      default: "Monitor",
+    },
+    features: {
+      type: [String],
+      default: [],
+    },
     alt: {
       type: String,
       trim: true,
