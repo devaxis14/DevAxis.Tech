@@ -18,16 +18,27 @@ const uploadRoutes = require("./routes/upload");
 const seoRoutes = require("./routes/seo");
 
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT;
 
 // ── Connect to MongoDB ──
 connectDB();
 
 // ── Global Middleware ──
 app.use(helmet()); // Security headers
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  "http://localhost:3000"
+];
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true, // Allow cookies for JWT
   })
 );
