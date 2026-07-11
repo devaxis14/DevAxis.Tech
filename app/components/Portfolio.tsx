@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 const DEFAULT_PROJECTS = [
   {
@@ -77,7 +80,12 @@ interface PortfolioProps {
 }
 
 export default function Portfolio({ data }: PortfolioProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
   const projects = data?.length ? data : DEFAULT_PROJECTS;
+
+  // If expanded, show all projects.
+  // If not expanded, we render up to 6 projects so desktop shows 6.
+  const visibleProjects = isExpanded ? projects : projects.slice(0, 6);
 
   return (
     <section id="portfolio" className="py-16 sm:py-20 lg:py-24 bg-white">
@@ -103,16 +111,21 @@ export default function Portfolio({ data }: PortfolioProps) {
 
         {/* Portfolio grid — 1 col mobile → 2 col tablet → 3 col desktop */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7">
-          {projects.map((project) => {
+          {visibleProjects.map((project, index) => {
             const imgSrc =
               project.image ||
               DEFAULT_IMAGES[project.title] ||
               "/images/portfolio-ecommerce.png";
 
+            // Hide the 4th, 5th, and 6th items on mobile if not expanded
+            const isHiddenOnMobile = !isExpanded && index >= 3;
+
             return (
               <div
                 key={project._id}
-                className="group bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300"
+                className={`group bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 ${
+                  isHiddenOnMobile ? "hidden md:block" : ""
+                }`}
               >
                 {/* Image */}
                 <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
@@ -131,16 +144,16 @@ export default function Portfolio({ data }: PortfolioProps) {
                 </div>
 
                 {/* Content */}
-                <div className="p-5 sm:p-6">
+                <div className="p-5 sm:p-6 flex flex-col h-[calc(100%-75%)] min-h-[220px]">
                   <h3 className="font-heading font-bold text-navy text-base sm:text-lg mb-2">
                     {project.title}
                   </h3>
-                  <p className="text-sm text-gray-500 leading-relaxed mb-4">
+                  <p className="text-sm text-gray-500 leading-relaxed mb-4 flex-grow">
                     {project.description}
                   </p>
                   <Link
                     href="#contact"
-                    className="inline-flex items-center gap-1 text-sm font-semibold text-coral hover:text-coral-hover transition-colors duration-200 min-h-[44px]"
+                    className="inline-flex items-center gap-1 text-sm font-semibold text-coral hover:text-coral-hover transition-colors duration-200 mt-auto min-h-[44px]"
                   >
                     View Case Study
                     <svg
@@ -164,11 +177,19 @@ export default function Portfolio({ data }: PortfolioProps) {
           })}
         </div>
 
-        {/* CTA */}
-        <div className="text-center mt-10 sm:mt-14">
+        {/* CTA & View More */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10 sm:mt-14">
+          {projects.length > 3 && (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="inline-flex items-center justify-center px-7 py-3.5 border-2 border-navy text-navy hover:bg-navy hover:text-white font-semibold rounded-lg transition-colors duration-200 text-sm sm:text-base min-h-[48px] w-full sm:w-auto"
+            >
+              {isExpanded ? "Show Less Projects" : "View More Projects"}
+            </button>
+          )}
           <Link
             href="#contact"
-            className="inline-flex items-center justify-center px-7 py-3.5 bg-navy hover:bg-navy-light text-white font-semibold rounded-lg transition-colors duration-200 text-sm sm:text-base min-h-[48px] shadow-md"
+            className="inline-flex items-center justify-center px-7 py-3.5 bg-navy hover:bg-navy-light text-white font-semibold rounded-lg transition-colors duration-200 text-sm sm:text-base min-h-[48px] shadow-md w-full sm:w-auto"
           >
             Start Your Project With Us
           </Link>
