@@ -9,12 +9,11 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 interface Testimonial {
   _id: string;
   name: string;
-  company: string;
-  position: string;
-  content: string;
+  role: string;
+  quote: string;
   rating: number;
-  image: string;
-  isApproved: boolean;
+  initials: string;
+  status: string;
   createdAt: string;
 }
 
@@ -42,8 +41,9 @@ export default function TestimonialsEditor() {
     fetchTestimonials();
   }, []);
 
-  const toggleStatus = async (id: string, currentStatus: boolean) => {
+  const toggleStatus = async (id: string, currentStatus: string) => {
     try {
+      const newStatus = currentStatus === "approved" ? "pending" : "approved";
       const token = getToken();
       const res = await fetch(`${API_URL}/api/testimonials/${id}/status`, {
         method: "PATCH",
@@ -51,10 +51,10 @@ export default function TestimonialsEditor() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ isApproved: !currentStatus }),
+        body: JSON.stringify({ status: newStatus }),
       });
       if (res.ok) {
-        setTestimonials(testimonials.map(t => t._id === id ? { ...t, isApproved: !currentStatus } : t));
+        setTestimonials(testimonials.map(t => t._id === id ? { ...t, status: newStatus } : t));
       }
     } catch (err) {
       console.error(err);
@@ -94,35 +94,30 @@ export default function TestimonialsEditor() {
         ) : (
           <div className="space-y-4">
             {testimonials.map(item => (
-              <div key={item._id} className={`border rounded-lg p-5 flex flex-col md:flex-row gap-6 items-start ${!item.isApproved ? 'border-yellow-300 bg-yellow-50' : 'border-gray-200'}`}>
-                <div className="w-16 h-16 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
-                  {item.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">No Img</div>
-                  )}
+              <div key={item._id} className={`border rounded-lg p-5 flex flex-col md:flex-row gap-6 items-start ${item.status !== 'approved' ? 'border-yellow-300 bg-yellow-50' : 'border-gray-200'}`}>
+                <div className="w-16 h-16 rounded-full bg-navy text-white overflow-hidden flex-shrink-0 flex items-center justify-center font-bold text-xl">
+                  {item.initials}
                 </div>
                 
                 <div className="flex-1">
                   <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
                     <div>
                       <h3 className="font-bold text-navy">{item.name}</h3>
-                      <p className="text-xs text-gray-500 mb-2">{item.position} at {item.company}</p>
+                      <p className="text-xs text-gray-500 mb-2">{item.role}</p>
                       <div className="text-coral text-sm mb-3">{"★".repeat(item.rating)}{"☆".repeat(5-item.rating)}</div>
-                      <p className="text-sm text-gray-700 italic">&ldquo;{item.content}&rdquo;</p>
+                      <p className="text-sm text-gray-700 italic">&ldquo;{item.quote}&rdquo;</p>
                     </div>
                     
                     <div className="flex gap-2 items-center shrink-0">
                       <button 
-                        onClick={() => toggleStatus(item._id, item.isApproved)}
+                        onClick={() => toggleStatus(item._id, item.status)}
                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium border transition-colors ${
-                          item.isApproved 
+                          item.status === 'approved'
                             ? "bg-green-50 text-green-700 border-green-200 hover:bg-green-100" 
                             : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
                         }`}
                       >
-                        {item.isApproved ? <><CheckCircle size={14}/> Approved</> : "Approve"}
+                        {item.status === 'approved' ? <><CheckCircle size={14}/> Approved</> : "Approve"}
                       </button>
                       <button 
                         onClick={() => handleDelete(item._id)}
