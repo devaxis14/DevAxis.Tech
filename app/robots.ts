@@ -1,11 +1,15 @@
 import { MetadataRoute } from "next";
+import { getSeoSettings } from "./lib/api";
 
-export default function robots(): MetadataRoute.Robots {
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  const seo = await getSeoSettings();
+  const baseUrl = seo?.canonicalUrl || "https://devaxistechnologies.in";
+
   return {
     rules: {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://www.devaxistechnologies.in/sitemap.xml",
+    sitemap: `${baseUrl}/sitemap.xml`,
   };
 }

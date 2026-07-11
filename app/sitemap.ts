@@ -1,7 +1,9 @@
 import { MetadataRoute } from "next";
+import { getSeoSettings } from "./lib/api";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://www.devaxistechnologies.in";
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const seo = await getSeoSettings();
+  const baseUrl = seo?.canonicalUrl || "https://www.devaxistechnologies.in";
 
   return [
     {
