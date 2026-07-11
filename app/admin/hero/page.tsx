@@ -9,13 +9,11 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 
 export default function HeroEditor() {
   const [formData, setFormData] = useState({
-    heading: "",
+    headline: "",
+    highlightedText: "",
     subheading: "",
-    primaryButtonText: "",
-    primaryButtonLink: "",
-    secondaryButtonText: "",
-    secondaryButtonLink: "",
-    heroImage: "",
+    ctaText: "",
+    backgroundImage: "",
   });
   
   const [loading, setLoading] = useState(true);
@@ -30,7 +28,13 @@ export default function HeroEditor() {
         const data = await res.json();
         
         if (data.data) {
-          setFormData(data.data);
+          setFormData({
+            headline: data.data.headline || "",
+            highlightedText: data.data.highlightedText || "",
+            subheading: data.data.subheading || "",
+            ctaText: data.data.ctaText || "",
+            backgroundImage: data.data.backgroundImage || "",
+          });
         }
       } catch (err) {
         console.error("Failed to fetch hero content", err);
@@ -75,7 +79,7 @@ export default function HeroEditor() {
   };
 
   const handleImageChange = (url: string | null) => {
-    setFormData((prev) => ({ ...prev, heroImage: url || "" }));
+    setFormData((prev) => ({ ...prev, backgroundImage: url || "" }));
   };
 
   if (loading) {
@@ -102,18 +106,33 @@ export default function HeroEditor() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-6">
-              {/* Heading */}
+              {/* Headline */}
               <div>
                 <label className="block text-sm font-medium text-navy mb-1.5">
-                  Main Heading
+                  Main Headline (Top line)
                 </label>
-                <textarea
+                <input
                   required
-                  rows={3}
-                  value={formData.heading}
-                  onChange={(e) => setFormData({ ...formData, heading: e.target.value })}
+                  type="text"
+                  value={formData.headline}
+                  onChange={(e) => setFormData({ ...formData, headline: e.target.value })}
                   className="w-full px-4 py-3 rounded-lg border border-gray-200 text-sm bg-warm-gray50 focus:bg-white focus:ring-2 focus:ring-coral/20 focus:border-coral outline-none transition-all"
-                  placeholder="Transforming Ideas into Digital Realities"
+                  placeholder="Define Your"
+                />
+              </div>
+
+              {/* Highlighted Text */}
+              <div>
+                <label className="block text-sm font-medium text-navy mb-1.5">
+                  Highlighted Text (Bottom line, colored)
+                </label>
+                <input
+                  required
+                  type="text"
+                  value={formData.highlightedText}
+                  onChange={(e) => setFormData({ ...formData, highlightedText: e.target.value })}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 text-sm bg-warm-gray50 focus:bg-white focus:ring-2 focus:ring-coral/20 focus:border-coral outline-none transition-all"
+                  placeholder="Digital Space"
                 />
               </div>
 
@@ -127,7 +146,7 @@ export default function HeroEditor() {
                   value={formData.subheading}
                   onChange={(e) => setFormData({ ...formData, subheading: e.target.value })}
                   className="w-full px-4 py-3 rounded-lg border border-gray-200 text-sm bg-warm-gray50 focus:bg-white focus:ring-2 focus:ring-coral/20 focus:border-coral outline-none transition-all"
-                  placeholder="We are a leading web design company..."
+                  placeholder="We build immersive digital experiences..."
                 />
               </div>
             </div>
@@ -135,64 +154,29 @@ export default function HeroEditor() {
             <div>
               {/* Image Uploader */}
               <ImageUploader 
-                label="Hero Image"
-                recommendedSize="1200x800px"
-                value={formData.heroImage}
+                label="Background Image"
+                recommendedSize="1920x1080px"
+                value={formData.backgroundImage}
                 onChange={handleImageChange}
               />
             </div>
           </div>
 
           <div className="border-t border-gray-100 pt-6 mt-6">
-            <h3 className="text-sm font-bold text-navy mb-4">Call to Action Buttons</h3>
+            <h3 className="text-sm font-bold text-navy mb-4">Call to Action Button</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               
-              {/* Primary Button */}
               <div className="p-4 bg-gray-50 rounded-lg border border-gray-100 space-y-4">
-                <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Primary Button (Coral)</h4>
+                <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Button Label</h4>
                 <div>
                   <label className="block text-xs font-medium text-navy mb-1.5">Label</label>
                   <input
                     type="text"
-                    value={formData.primaryButtonText}
-                    onChange={(e) => setFormData({ ...formData, primaryButtonText: e.target.value })}
+                    required
+                    value={formData.ctaText}
+                    onChange={(e) => setFormData({ ...formData, ctaText: e.target.value })}
                     className="w-full px-3 py-2 rounded-md border border-gray-200 text-sm bg-white"
-                    placeholder="Get Started"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-navy mb-1.5">Link (URL or #hash)</label>
-                  <input
-                    type="text"
-                    value={formData.primaryButtonLink}
-                    onChange={(e) => setFormData({ ...formData, primaryButtonLink: e.target.value })}
-                    className="w-full px-3 py-2 rounded-md border border-gray-200 text-sm bg-white"
-                    placeholder="#contact"
-                  />
-                </div>
-              </div>
-
-              {/* Secondary Button */}
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-100 space-y-4">
-                <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Secondary Button (Outline)</h4>
-                <div>
-                  <label className="block text-xs font-medium text-navy mb-1.5">Label</label>
-                  <input
-                    type="text"
-                    value={formData.secondaryButtonText}
-                    onChange={(e) => setFormData({ ...formData, secondaryButtonText: e.target.value })}
-                    className="w-full px-3 py-2 rounded-md border border-gray-200 text-sm bg-white"
-                    placeholder="View Portfolio"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-navy mb-1.5">Link (URL or #hash)</label>
-                  <input
-                    type="text"
-                    value={formData.secondaryButtonLink}
-                    onChange={(e) => setFormData({ ...formData, secondaryButtonLink: e.target.value })}
-                    className="w-full px-3 py-2 rounded-md border border-gray-200 text-sm bg-white"
-                    placeholder="#portfolio"
+                    placeholder="Get a Quote"
                   />
                 </div>
               </div>
