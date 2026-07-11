@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://devaxis.in/sitemap.xml",
+    sitemap: "https://www.devaxistechnologies.in/sitemap.xml",
   };
 }

@@ -3,7 +3,7 @@ import { getSeoSettings } from "./lib/api";
 import "./globals.css";
 
 const DEFAULT_COMPANY_NAME = "DevAxis";
-const DEFAULT_SITE_URL = "https://devaxistechnologies.in";
+const DEFAULT_SITE_URL = "https://www.devaxistechnologies.in";
 
 export async function generateMetadata(): Promise<Metadata> {
   // Fetch SEO settings from the Express API
