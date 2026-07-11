@@ -13,6 +13,7 @@ interface PortfolioItem {
   category: string;
   image: string;
   link: string;
+  description: string;
 }
 
 export default function PortfolioEditor() {
@@ -27,6 +28,7 @@ export default function PortfolioEditor() {
     category: "",
     image: "",
     link: "",
+    description: "",
   });
   
   const [saving, setSaving] = useState(false);
@@ -56,10 +58,11 @@ export default function PortfolioEditor() {
         category: item.category,
         image: item.image,
         link: item.link || "",
+        description: item.description || "",
       });
     } else {
       setEditingId(null);
-      setFormData({ title: "", category: "", image: "", link: "" });
+      setFormData({ title: "", category: "", image: "", link: "", description: "" });
     }
     setError("");
     setIsModalOpen(true);
@@ -182,6 +185,16 @@ export default function PortfolioEditor() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">Category</label>
                   <input required type="text" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full px-4 py-2 border rounded-lg" placeholder="e.g. Web App" />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Description (Optional)</label>
+                  <textarea 
+                    value={formData.description} 
+                    onChange={e => setFormData({...formData, description: e.target.value})} 
+                    className="w-full px-4 py-2 border rounded-lg h-24 resize-none" 
+                    placeholder="Short description of the project (max 500 characters)"
+                    maxLength={500}
+                  ></textarea>
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">Live Link (Optional)</label>
