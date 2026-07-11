@@ -25,6 +25,7 @@ const MENU_ITEMS = [
   { label: "Testimonials", href: "/admin/testimonials", icon: MessageSquare },
   { label: "Contact Info", href: "/admin/contact-info", icon: Mail },
   { label: "Submissions", href: "/admin/submissions", icon: Mail },
+  { label: "Footer", href: "/admin/footer", icon: Settings },
   { label: "SEO Settings", href: "/admin/seo", icon: Settings },
 ];
 
