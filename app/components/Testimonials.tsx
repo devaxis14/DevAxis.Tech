@@ -1,32 +1,31 @@
-const TESTIMONIALS = [
+const DEFAULT_TESTIMONIALS = [
   {
+    _id: "default-1",
     name: "Rahul Krishnan",
     role: "CEO, HomesKerala Realty",
-    quote:
-      "DevAxis completely transformed our online presence. Our lead generation has increased by 300% since the new website launched. Their understanding of what Kochi businesses need is unmatched.",
+    quote: "DevAxis completely transformed our online presence. Our lead generation has increased by 300% since the new website launched. Their understanding of what Kochi businesses need is unmatched.",
     rating: 5,
     initials: "RK",
-    bgColor: "bg-navy",
   },
   {
+    _id: "default-2",
     name: "Sneha George",
     role: "Founder, StyleVault",
-    quote:
-      "From the first call to launch day, the DevAxis team was incredible. Our e-commerce store is beautiful, fast, and our customers love the shopping experience. Revenue is up 150%.",
+    quote: "From the first call to launch day, the DevAxis team was incredible. Our e-commerce store is beautiful, fast, and our customers love the shopping experience. Revenue is up 150%.",
     rating: 5,
     initials: "SG",
-    bgColor: "bg-coral",
   },
   {
+    _id: "default-3",
     name: "Dr. Anil Kumar",
     role: "Director, CareFirst Clinic",
-    quote:
-      "We needed a professional healthcare website with online booking, and DevAxis delivered beyond expectations. Patient appointments through the website have doubled in just 3 months.",
+    quote: "We needed a professional healthcare website with online booking, and DevAxis delivered beyond expectations. Patient appointments through the website have doubled in just 3 months.",
     rating: 5,
     initials: "AK",
-    bgColor: "bg-navy-mid",
   },
 ];
+
+const BG_COLORS = ["bg-navy", "bg-coral", "bg-navy-mid"];
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -47,7 +46,22 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
-export default function Testimonials() {
+interface TestimonialData {
+  _id: string;
+  name: string;
+  role: string;
+  quote: string;
+  rating: number;
+  initials: string;
+}
+
+interface TestimonialsProps {
+  data?: TestimonialData[] | null;
+}
+
+export default function Testimonials({ data }: TestimonialsProps) {
+  const testimonials = data?.length ? data : DEFAULT_TESTIMONIALS;
+
   return (
     <section id="testimonials" className="py-16 sm:py-20 lg:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -72,9 +86,9 @@ export default function Testimonials() {
 
         {/* Testimonials grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7">
-          {TESTIMONIALS.map((testimonial) => (
+          {testimonials.map((testimonial, i) => (
             <div
-              key={testimonial.name}
+              key={testimonial._id}
               className="bg-warm-gray50 rounded-xl p-6 sm:p-7 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col"
             >
               {/* Quote icon */}
@@ -100,7 +114,7 @@ export default function Testimonials() {
               {/* Author */}
               <div className="mt-6 flex items-center gap-3 pt-5 border-t border-gray-200">
                 <div
-                  className={`w-11 h-11 rounded-full ${testimonial.bgColor} flex items-center justify-center text-white font-heading font-bold text-sm flex-shrink-0`}
+                  className={`w-11 h-11 rounded-full ${BG_COLORS[i % BG_COLORS.length]} flex items-center justify-center text-white font-heading font-bold text-sm flex-shrink-0`}
                 >
                   {testimonial.initials}
                 </div>

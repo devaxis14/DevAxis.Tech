@@ -13,9 +13,25 @@ const NAV_LINKS = [
   { label: "Contact", href: "#contact" },
 ];
 
-export default function Navbar() {
+const DEFAULT_CONTACT = {
+  phone: "+91 98765 43210",
+  email: "hello@devaxis.in",
+};
+
+interface NavbarProps {
+  contactInfo?: {
+    phone?: string;
+    email?: string;
+  } | null;
+}
+
+export default function Navbar({ contactInfo }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  const phone = contactInfo?.phone || DEFAULT_CONTACT.phone;
+  const email = contactInfo?.email || DEFAULT_CONTACT.email;
+  const phoneHref = `tel:${phone.replace(/\s/g, "")}`;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -174,7 +190,7 @@ export default function Navbar() {
         {/* Mobile menu footer */}
         <div className="mt-auto p-6 border-t border-white/10">
           <a
-            href="tel:+919876543210"
+            href={phoneHref}
             className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors min-h-[44px]"
           >
             <svg
@@ -190,10 +206,10 @@ export default function Navbar() {
             >
               <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
             </svg>
-            +91 98765 43210
+            {phone}
           </a>
           <a
-            href="mailto:hello@devaxis.in"
+            href={`mailto:${email}`}
             className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors mt-2 min-h-[44px]"
           >
             <svg
@@ -210,7 +226,7 @@ export default function Navbar() {
               <rect x="2" y="4" width="20" height="16" rx="2" />
               <path d="M22 7l-10 7L2 7" />
             </svg>
-            hello@devaxis.in
+            {email}
           </a>
         </div>
       </div>

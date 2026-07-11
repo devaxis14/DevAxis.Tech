@@ -1,13 +1,29 @@
 import React from "react";
 
-const STATS = [
+const DEFAULT_STATS = [
   { number: "250", label: "Projects Completed" },
   { number: "300", label: "Happy Clients" },
   { number: "50", label: "Innovations" },
   { number: "30", label: "Team Members" },
 ];
 
-export default function FunFact() {
+const DEFAULT_TITLE = "Our fun fact";
+const DEFAULT_DESCRIPTION =
+  "Each time we fix a particularly tricky bug, we give it a name and create a virtual \u2018Bug Wall of Fame\u2019. It\u2019s our way of celebrating overcoming challenges and learning from our mistakes.";
+
+interface FunFactProps {
+  data?: {
+    title?: string;
+    description?: string;
+    stats?: { number: string; label: string }[];
+  } | null;
+}
+
+export default function FunFact({ data }: FunFactProps) {
+  const title = data?.title || DEFAULT_TITLE;
+  const description = data?.description || DEFAULT_DESCRIPTION;
+  const stats = data?.stats?.length ? data.stats : DEFAULT_STATS;
+
   return (
     <section className="relative z-20 w-full -mt-44 sm:-mt-40 lg:-mt-36">
       {/* Dark background starts exactly where Hero ends (offset matches the negative margin) */}
@@ -45,22 +61,19 @@ export default function FunFact() {
             {/* Left Column: Text */}
             <div className="flex flex-col items-start">
               <h2 className="font-bold text-white text-3xl sm:text-4xl lg:text-5xl tracking-tight">
-                Our fun fact
+                {title}
               </h2>
               <p
                 className="mt-4 sm:mt-5 text-sm sm:text-base leading-relaxed max-w-md"
                 style={{ color: "#A0A0A0" }}
               >
-                Each time we fix a particularly tricky bug, we give it a name
-                and create a virtual &apos;Bug Wall of Fame&apos;. It&apos;s our way of
-                celebrating overcoming challenges and learning from our
-                mistakes.
+                {description}
               </p>
             </div>
 
             {/* Right Column: Stats Grid */}
             <div className="grid grid-cols-2 gap-y-8 gap-x-4 sm:gap-y-10 sm:gap-x-12">
-              {STATS.map((stat, i) => (
+              {stats.map((stat, i) => (
                 <div key={i} className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-3 lg:gap-4">
                   <div className="flex items-start">
                     <span className="font-bold text-white text-4xl sm:text-5xl tracking-tight leading-none">

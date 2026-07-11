@@ -1,7 +1,30 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Hero() {
+// Default values matching original hardcoded content
+const DEFAULTS = {
+  headline: "Define Your",
+  highlightedText: "Digital Space",
+  subheading:
+    "We build immersive digital experiences that elevate your brand and drive real results.",
+  ctaText: "Get a Quote",
+  backgroundImage: null as string | null,
+};
+
+interface HeroProps {
+  data?: {
+    headline?: string;
+    highlightedText?: string;
+    subheading?: string;
+    ctaText?: string;
+    backgroundImage?: string | null;
+  } | null;
+}
+
+export default function Hero({ data }: HeroProps) {
+  const hero = { ...DEFAULTS, ...data };
+  const bgImage = hero.backgroundImage || "/images/hero-bg.png";
+
   return (
     <section
       id="hero"
@@ -10,7 +33,7 @@ export default function Hero() {
       {/* Background image */}
       <div className="absolute inset-0">
         <Image
-          src="/images/hero-bg.png"
+          src={bgImage}
           alt="Modern web design workspace at DevAxis Kochi"
           fill
           priority
@@ -33,8 +56,8 @@ export default function Hero() {
             fontSize: "clamp(2.5rem, 6vw + 1rem, 5rem)",
           }}
         >
-          Define Your<br />
-          <span className="text-coral">Digital Space</span>
+          {hero.headline}<br />
+          <span className="text-coral">{hero.highlightedText}</span>
         </h1>
 
         {/* Bottom Row: CTA (Left) & Subheading (Right) */}
@@ -46,7 +69,7 @@ export default function Hero() {
               href="#contact"
               className="group inline-flex items-center text-white font-bold text-lg sm:text-xl hover:text-coral transition-colors duration-300"
             >
-              Get a Quote
+              {hero.ctaText}
               <svg
                 width="24"
                 height="24"
@@ -72,7 +95,7 @@ export default function Hero() {
                 fontSize: "clamp(1rem, 1.5vw + 0.25rem, 1.125rem)",
               }}
             >
-              We build immersive digital experiences that elevate your brand and drive real results.
+              {hero.subheading}
             </p>
           </div>
           

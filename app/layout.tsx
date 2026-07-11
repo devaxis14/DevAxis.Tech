@@ -1,18 +1,21 @@
 import type { Metadata } from "next";
+import { getSeoSettings } from "./lib/api";
 import "./globals.css";
 
-const SITE_URL = "https://devaxis.in";
-const COMPANY_NAME = "DevAxis";
+const DEFAULT_COMPANY_NAME = "DevAxis";
+const DEFAULT_SITE_URL = "https://devaxis.in";
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: {
-    default: `Web Design Company in Kochi, Kerala | ${COMPANY_NAME}`,
-    template: `%s | ${COMPANY_NAME}`,
-  },
-  description:
-    "DevAxis is a leading web design company in Kochi, Kerala. We craft stunning websites, e-commerce stores, and SEO strategies that grow your business.",
-  keywords: [
+export async function generateMetadata(): Promise<Metadata> {
+  // Fetch SEO settings from the Express API
+  const seo = await getSeoSettings();
+
+  const siteUrl = seo?.siteUrl || DEFAULT_SITE_URL;
+  const companyName = seo?.companyName || DEFAULT_COMPANY_NAME;
+  const pageTitle = seo?.pageTitle || `Web Design Company in Kochi, Kerala | ${companyName}`;
+  const metaDescription =
+    seo?.metaDescription ||
+    "DevAxis is a leading web design company in Kochi, Kerala. We craft stunning websites, e-commerce stores, and SEO strategies that grow your business.";
+  const keywords = seo?.keywords || [
     "web design Kochi",
     "web development Kerala",
     "web design company Kochi",
@@ -20,57 +23,68 @@ export const metadata: Metadata = {
     "ecommerce development Kochi",
     "SEO services Kochi",
     "web agency Kerala",
-  ],
-  authors: [{ name: COMPANY_NAME }],
-  creator: COMPANY_NAME,
-  openGraph: {
-    type: "website",
-    locale: "en_IN",
-    url: SITE_URL,
-    siteName: COMPANY_NAME,
-    title: `Web Design Company in Kochi, Kerala | ${COMPANY_NAME}`,
-    description:
-      "DevAxis is a leading web design company in Kochi, Kerala. We craft stunning websites, e-commerce stores, and SEO strategies that grow your business.",
-    images: [
-      {
-        url: `${SITE_URL}/images/og-image.png`,
-        width: 1200,
-        height: 630,
-        alt: "DevAxis — Web Design Company in Kochi, Kerala",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `Web Design Company in Kochi, Kerala | ${COMPANY_NAME}`,
-    description:
-      "DevAxis is a leading web design company in Kochi, Kerala. We craft stunning websites, e-commerce stores, and SEO strategies.",
-    images: [`${SITE_URL}/images/og-image.png`],
-  },
-  alternates: {
-    canonical: SITE_URL,
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+  ];
+  const ogImage = seo?.ogImage || `${siteUrl}/images/og-image.png`;
+
+  return {
+    metadataBase: new URL(siteUrl),
+    title: {
+      default: pageTitle,
+      template: `%s | ${companyName}`,
+    },
+    description: metaDescription,
+    keywords: keywords,
+    authors: [{ name: companyName }],
+    creator: companyName,
+    openGraph: {
+      type: "website",
+      locale: "en_IN",
+      url: siteUrl,
+      siteName: companyName,
+      title: pageTitle,
+      description: metaDescription,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: `${companyName} — Web Design Company`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: pageTitle,
+      description: metaDescription,
+      images: [ogImage],
+    },
+    alternates: {
+      canonical: siteUrl,
+    },
+    robots: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
-  },
-};
+  };
+}
 
 /* JSON-LD Structured Data — LocalBusiness + ProfessionalService */
+// To make this fully dynamic we can also pass props, but for now we'll keep the core schema static 
+// since it relies on specific local business details that aren't fully CMS managed yet.
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": ["LocalBusiness", "ProfessionalService"],
-  name: COMPANY_NAME,
-  image: `${SITE_URL}/images/og-image.png`,
-  "@id": SITE_URL,
-  url: SITE_URL,
+  name: DEFAULT_COMPANY_NAME,
+  image: `${DEFAULT_SITE_URL}/images/og-image.png`,
+  "@id": DEFAULT_SITE_URL,
+  url: DEFAULT_SITE_URL,
   telephone: "+91-9876543210",
   email: "hello@devaxis.in",
   address: {

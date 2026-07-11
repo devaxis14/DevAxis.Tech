@@ -2,7 +2,55 @@
 
 import { useState, FormEvent } from "react";
 
-export default function Contact() {
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+
+const DEFAULT_CONTACT = {
+  phone: "+91 98765 43210",
+  email: "hello@devaxis.in",
+  whatsappNumber: "919876543210",
+  whatsappMessage: "Hi DevAxis, I'm interested in your web design services.",
+  address: {
+    line1: "2nd Floor, Skyline Tower,",
+    line2: "Marine Drive, Kochi,",
+    line3: "Kerala 682031, India",
+  },
+  businessHours: {
+    weekday: "Mon–Fri 9am–6pm",
+    saturday: "Sat 10am–2pm",
+  },
+};
+
+interface ContactProps {
+  contactInfo?: {
+    phone?: string;
+    email?: string;
+    whatsappNumber?: string;
+    whatsappMessage?: string;
+    address?: { line1?: string; line2?: string; line3?: string };
+    businessHours?: { weekday?: string; saturday?: string };
+  } | null;
+}
+
+export default function Contact({ contactInfo }: ContactProps) {
+  const info = {
+    phone: contactInfo?.phone || DEFAULT_CONTACT.phone,
+    email: contactInfo?.email || DEFAULT_CONTACT.email,
+    whatsappNumber: contactInfo?.whatsappNumber || DEFAULT_CONTACT.whatsappNumber,
+    whatsappMessage: contactInfo?.whatsappMessage || DEFAULT_CONTACT.whatsappMessage,
+    address: {
+      line1: contactInfo?.address?.line1 || DEFAULT_CONTACT.address.line1,
+      line2: contactInfo?.address?.line2 || DEFAULT_CONTACT.address.line2,
+      line3: contactInfo?.address?.line3 || DEFAULT_CONTACT.address.line3,
+    },
+    businessHours: {
+      weekday: contactInfo?.businessHours?.weekday || DEFAULT_CONTACT.businessHours.weekday,
+      saturday: contactInfo?.businessHours?.saturday || DEFAULT_CONTACT.businessHours.saturday,
+    },
+  };
+
+  const whatsappUrl = `https://wa.me/${info.whatsappNumber}?text=${encodeURIComponent(info.whatsappMessage)}`;
+  const phoneHref = `tel:${info.phone.replace(/\s/g, "")}`;
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -11,14 +59,35 @@ export default function Contact() {
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    // In production, this would send to an API endpoint
-    console.log("Form submitted:", formData);
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 5000);
-    setFormData({ name: "", email: "", phone: "", service: "", message: "" });
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch(`${API_URL}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to submit");
+      }
+
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 5000);
+      setFormData({ name: "", email: "", phone: "", service: "", message: "" });
+    } catch (err) {
+      setError((err as Error).message || "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -111,7 +180,7 @@ export default function Contact() {
                     onChange={(e) =>
                       setFormData({ ...formData, phone: e.target.value })
                     }
-                    placeholder="+91 98765 43210"
+                    placeholder={info.phone}
                     className="w-full px-4 py-3 rounded-lg border border-gray-200 text-sm text-gray-800 placeholder-gray-400 bg-warm-gray50 transition-colors duration-200 min-h-[44px]"
                   />
                 </div>
@@ -165,12 +234,18 @@ export default function Contact() {
                 />
               </div>
 
+              {/* Error message */}
+              {error && (
+                <p className="mt-3 text-sm text-red-600 font-medium">{error}</p>
+              )}
+
               {/* Submit */}
               <button
                 type="submit"
-                className="mt-6 w-full sm:w-auto px-8 py-3.5 bg-coral hover:bg-coral-hover text-white font-semibold rounded-lg transition-colors duration-200 text-sm sm:text-base min-h-[48px] shadow-md"
+                disabled={loading}
+                className="mt-6 w-full sm:w-auto px-8 py-3.5 bg-coral hover:bg-coral-hover text-white font-semibold rounded-lg transition-colors duration-200 text-sm sm:text-base min-h-[48px] shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {submitted ? "✓ Message Sent!" : "Send Message"}
+                {loading ? "Sending..." : submitted ? "✓ Message Sent!" : "Send Message"}
               </button>
 
               {submitted && (
@@ -192,17 +267,12 @@ export default function Contact() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-heading font-semibold text-navy text-sm mb-1">
-                    Phone
-                  </h3>
-                  <a
-                    href="tel:+919876543210"
-                    className="text-sm text-gray-600 hover:text-coral transition-colors"
-                  >
-                    +91 98765 43210
+                  <h3 className="font-heading font-semibold text-navy text-sm mb-1">Phone</h3>
+                  <a href={phoneHref} className="text-sm text-gray-600 hover:text-coral transition-colors">
+                    {info.phone}
                   </a>
                   <p className="text-xs text-gray-400 mt-0.5">
-                    Mon–Fri 9am–6pm, Sat 10am–2pm
+                    {info.businessHours.weekday}, {info.businessHours.saturday}
                   </p>
                 </div>
               </div>
@@ -218,18 +288,11 @@ export default function Contact() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-heading font-semibold text-navy text-sm mb-1">
-                    Email
-                  </h3>
-                  <a
-                    href="mailto:hello@devaxis.in"
-                    className="text-sm text-gray-600 hover:text-coral transition-colors"
-                  >
-                    hello@devaxis.in
+                  <h3 className="font-heading font-semibold text-navy text-sm mb-1">Email</h3>
+                  <a href={`mailto:${info.email}`} className="text-sm text-gray-600 hover:text-coral transition-colors">
+                    {info.email}
                   </a>
-                  <p className="text-xs text-gray-400 mt-0.5">
-                    We reply within 24 hours
-                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5">We reply within 24 hours</p>
                 </div>
               </div>
             </div>
@@ -243,20 +306,11 @@ export default function Contact() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-heading font-semibold text-navy text-sm mb-1">
-                    WhatsApp
-                  </h3>
-                  <a
-                    href="https://wa.me/919876543210?text=Hi%20DevAxis%2C%20I%27m%20interested%20in%20your%20web%20design%20services."
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-gray-600 hover:text-coral transition-colors"
-                  >
+                  <h3 className="font-heading font-semibold text-navy text-sm mb-1">WhatsApp</h3>
+                  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 hover:text-coral transition-colors">
                     Chat with us instantly
                   </a>
-                  <p className="text-xs text-gray-400 mt-0.5">
-                    Quick responses, even after hours
-                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5">Quick responses, even after hours</p>
                 </div>
               </div>
             </div>
@@ -271,13 +325,11 @@ export default function Contact() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-heading font-semibold text-navy text-sm mb-1">
-                    Office
-                  </h3>
+                  <h3 className="font-heading font-semibold text-navy text-sm mb-1">Office</h3>
                   <address className="not-italic text-sm text-gray-600 leading-relaxed">
-                    2nd Floor, Skyline Tower,<br />
-                    Marine Drive, Kochi,<br />
-                    Kerala 682031, India
+                    {info.address.line1}<br />
+                    {info.address.line2}<br />
+                    {info.address.line3}
                   </address>
                 </div>
               </div>

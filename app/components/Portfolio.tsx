@@ -1,58 +1,84 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const PROJECTS = [
+const DEFAULT_PROJECTS = [
   {
+    _id: "default-1",
     title: "StyleVault E-Commerce",
     category: "E-Commerce",
-    description:
-      "A premium fashion e-commerce platform with seamless checkout, inventory management, and mobile-first design.",
-    image: "/images/portfolio-ecommerce.png",
+    description: "A premium fashion e-commerce platform with seamless checkout, inventory management, and mobile-first design.",
+    image: null as string | null,
     alt: "E-commerce web design portfolio Kochi — StyleVault online fashion store",
   },
   {
+    _id: "default-2",
     title: "Kerala Pearl Restaurant",
     category: "Web Design",
-    description:
-      "A luxurious restaurant website with online reservations, menu showcase, and Kerala cuisine storytelling.",
-    image: "/images/portfolio-restaurant.png",
+    description: "A luxurious restaurant website with online reservations, menu showcase, and Kerala cuisine storytelling.",
+    image: null,
     alt: "Restaurant website design Kochi — Kerala Pearl dining experience",
   },
   {
+    _id: "default-3",
     title: "HomesKerala Realty",
     category: "Web Development",
-    description:
-      "A full-featured real estate platform with property listings, map integration, and lead capture for Kerala properties.",
-    image: "/images/portfolio-realestate.png",
+    description: "A full-featured real estate platform with property listings, map integration, and lead capture for Kerala properties.",
+    image: null,
     alt: "Real estate web development Kochi — HomesKerala property listings",
   },
   {
+    _id: "default-4",
     title: "EliteFit Gym",
     category: "Web Design",
-    description:
-      "A bold, high-energy fitness website with membership management, workout plans, and trainer profiles.",
-    image: "/images/portfolio-fitness.png",
+    description: "A bold, high-energy fitness website with membership management, workout plans, and trainer profiles.",
+    image: null,
     alt: "Fitness website design portfolio Kochi — EliteFit gym platform",
   },
   {
+    _id: "default-5",
     title: "CareFirst Clinic",
     category: "Web Development",
-    description:
-      "A professional healthcare portal with appointment booking, doctor profiles, and patient resources.",
-    image: "/images/portfolio-healthcare.png",
+    description: "A professional healthcare portal with appointment booking, doctor profiles, and patient resources.",
+    image: null,
     alt: "Healthcare web design Kochi — CareFirst clinic appointment system",
   },
   {
+    _id: "default-6",
     title: "Explore Kerala Travel",
     category: "SEO & Web Design",
-    description:
-      "A travel agency website with tour packages, booking engine, and SEO-optimized content driving organic traffic.",
-    image: "/images/portfolio-travel.png",
+    description: "A travel agency website with tour packages, booking engine, and SEO-optimized content driving organic traffic.",
+    image: null,
     alt: "Travel agency website design Kerala — Explore Kerala tour packages",
   },
 ];
 
-export default function Portfolio() {
+// Default images map (used when image field is null)
+const DEFAULT_IMAGES: Record<string, string> = {
+  "StyleVault E-Commerce": "/images/portfolio-ecommerce.png",
+  "Kerala Pearl Restaurant": "/images/portfolio-restaurant.png",
+  "HomesKerala Realty": "/images/portfolio-realestate.png",
+  "EliteFit Gym": "/images/portfolio-fitness.png",
+  "CareFirst Clinic": "/images/portfolio-healthcare.png",
+  "Explore Kerala Travel": "/images/portfolio-travel.png",
+};
+
+interface PortfolioProject {
+  _id: string;
+  title: string;
+  category: string;
+  description: string;
+  image: string | null;
+  alt?: string;
+  order?: number;
+}
+
+interface PortfolioProps {
+  data?: PortfolioProject[] | null;
+}
+
+export default function Portfolio({ data }: PortfolioProps) {
+  const projects = data?.length ? data : DEFAULT_PROJECTS;
+
   return (
     <section id="portfolio" className="py-16 sm:py-20 lg:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -77,58 +103,65 @@ export default function Portfolio() {
 
         {/* Portfolio grid — 1 col mobile → 2 col tablet → 3 col desktop */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7">
-          {PROJECTS.map((project) => (
-            <div
-              key={project.title}
-              className="group bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300"
-            >
-              {/* Image */}
-              <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
-                <Image
-                  src={project.image}
-                  alt={project.alt}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  loading="lazy"
-                />
-                {/* Category badge */}
-                <span className="absolute top-3 left-3 px-3 py-1 bg-navy text-white text-xs font-medium rounded-full">
-                  {project.category}
-                </span>
-              </div>
+          {projects.map((project) => {
+            const imgSrc =
+              project.image ||
+              DEFAULT_IMAGES[project.title] ||
+              "/images/portfolio-ecommerce.png";
 
-              {/* Content */}
-              <div className="p-5 sm:p-6">
-                <h3 className="font-heading font-bold text-navy text-base sm:text-lg mb-2">
-                  {project.title}
-                </h3>
-                <p className="text-sm text-gray-500 leading-relaxed mb-4">
-                  {project.description}
-                </p>
-                <Link
-                  href="#contact"
-                  className="inline-flex items-center gap-1 text-sm font-semibold text-coral hover:text-coral-hover transition-colors duration-200 min-h-[44px]"
-                >
-                  View Case Study
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
+            return (
+              <div
+                key={project._id}
+                className="group bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300"
+              >
+                {/* Image */}
+                <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
+                  <Image
+                    src={imgSrc}
+                    alt={project.alt || project.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    loading="lazy"
+                  />
+                  {/* Category badge */}
+                  <span className="absolute top-3 left-3 px-3 py-1 bg-navy text-white text-xs font-medium rounded-full">
+                    {project.category}
+                  </span>
+                </div>
+
+                {/* Content */}
+                <div className="p-5 sm:p-6">
+                  <h3 className="font-heading font-bold text-navy text-base sm:text-lg mb-2">
+                    {project.title}
+                  </h3>
+                  <p className="text-sm text-gray-500 leading-relaxed mb-4">
+                    {project.description}
+                  </p>
+                  <Link
+                    href="#contact"
+                    className="inline-flex items-center gap-1 text-sm font-semibold text-coral hover:text-coral-hover transition-colors duration-200 min-h-[44px]"
                   >
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                    <polyline points="12 5 19 12 12 19" />
-                  </svg>
-                </Link>
+                    View Case Study
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                      <polyline points="12 5 19 12 12 19" />
+                    </svg>
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* CTA */}

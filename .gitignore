@@ -27,6 +27,14 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env
+**/.env
+
+# server
+server/node_modules
+server/.env
+**/.DS_Store
+
 
 # vercel
 .vercel

@@ -3,34 +3,62 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const SERVICES = [
+const DEFAULT_SERVICES = [
   {
+    _id: "default-1",
     title: "Web Design",
     href: "#contact",
-    image: "/images/service-webdesign.png",
+    image: null as string | null,
     alt: "Web design service — laptop showing modern website mockup designed by DevAxis Kochi",
   },
   {
+    _id: "default-2",
     title: "Web Development",
     href: "#contact",
-    image: "/images/service-webdev.png",
+    image: null,
     alt: "Web development service — code editor showing React components by DevAxis",
   },
   {
+    _id: "default-3",
     title: "E-commerce Builds",
     href: "#contact",
-    image: "/images/service-ecommerce.png",
+    image: null,
     alt: "E-commerce development — mobile shopping app designed by DevAxis Kochi",
   },
   {
+    _id: "default-4",
     title: "SEO & Growth",
     href: "#contact",
-    image: "/images/service-seo.png",
+    image: null,
     alt: "SEO and growth services — analytics dashboard showing website traffic growth",
   },
 ];
 
-export default function Services() {
+// Default images map (used when image field is null)
+const DEFAULT_IMAGES: Record<string, string> = {
+  "Web Design": "/images/service-webdesign.png",
+  "Web Development": "/images/service-webdev.png",
+  "E-commerce Builds": "/images/service-ecommerce.png",
+  "SEO & Growth": "/images/service-seo.png",
+};
+
+interface ServiceData {
+  _id: string;
+  title: string;
+  href?: string;
+  image: string | null;
+  alt?: string;
+  description?: string;
+  order?: number;
+}
+
+interface ServicesProps {
+  data?: ServiceData[] | null;
+}
+
+export default function Services({ data }: ServicesProps) {
+  const services = data?.length ? data : DEFAULT_SERVICES;
+
   return (
     <section
       id="services"
@@ -113,16 +141,21 @@ export default function Services() {
           {/* ─── Right column: asymmetric masonry cards (4 columns) ─── */}
           {/* Mobile: 2-col staggered. Desktop: 4-col staggered. */}
           <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-5 items-start mt-10 lg:mt-0">
-            {SERVICES.map((service, index) => {
+            {services.map((service, index) => {
               // Alternating stagger: down, top, down, top
               const isDown = index % 2 === 0;
+              const imgSrc =
+                service.image ||
+                DEFAULT_IMAGES[service.title] ||
+                "/images/service-webdesign.png";
+
               return (
                 <div
-                  key={service.title}
+                  key={service._id}
                   className={`${isDown ? "mt-0 md:mt-24" : "mt-0"}`}
                 >
                   <Link
-                    href={service.href}
+                    href={service.href || "#contact"}
                     aria-label={`View ${service.title} services`}
                     className="group relative block rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.05] focus-visible:ring-2 focus-visible:ring-offset-2"
                     style={
@@ -135,8 +168,8 @@ export default function Services() {
                     {/* Taller aspect ratio on mobile so images are larger, square on desktop */}
                     <div className="relative w-full aspect-[3/4] sm:aspect-square">
                       <Image
-                        src={service.image}
-                        alt={service.alt}
+                        src={imgSrc}
+                        alt={service.alt || service.title}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-110"
                         sizes="(max-width: 768px) 50vw, 25vw"
