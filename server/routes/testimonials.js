@@ -17,6 +17,7 @@ router.get("/", getTestimonials); // Only returns approved for non-admin
 router.post("/submit", publicLimiter, submitTestimonial); // Client submission (rate-limited)
 
 // Admin routes
+router.get("/all", protect, getTestimonials);
 router.get("/:id", protect, getTestimonial);
 router.post("/", protect, createTestimonial);
 router.put("/:id", protect, updateTestimonial);

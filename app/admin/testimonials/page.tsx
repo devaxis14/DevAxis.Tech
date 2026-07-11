@@ -25,7 +25,7 @@ export default function TestimonialsEditor() {
     try {
       const token = getToken();
       // Fetch all for admin (approved and unapproved)
-      const res = await fetch(`${API_URL}/api/testimonials?all=true`, {
+      const res = await fetch(`${API_URL}/api/testimonials/all`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
