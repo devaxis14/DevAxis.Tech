@@ -28,7 +28,9 @@ connectDB();
 app.use(helmet()); // Security headers
 const allowedOrigins = [
   process.env.CLIENT_URL,
-  "http://localhost:3000"
+  "http://localhost:3000",
+  "https://devaxistechnologies.in",
+  "https://www.devaxistechnologies.in"
 ];
 
 app.use(
