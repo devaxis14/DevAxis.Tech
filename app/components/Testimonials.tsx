@@ -102,15 +102,18 @@ export default function Testimonials({ data }: TestimonialsProps) {
         {/* Testimonials carousel */}
         <Swiper
           modules={[Pagination, Autoplay]}
-          spaceBetween={28}
-          slidesPerView={1}
+          spaceBetween={20}
+          slidesPerView={1.2}
+          centeredSlides={true}
+          loop={true}
           breakpoints={{
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
+            640: { slidesPerView: 1.5, centeredSlides: true, spaceBetween: 24 },
+            768: { slidesPerView: 2, centeredSlides: false, spaceBetween: 28 },
+            1024: { slidesPerView: 3, centeredSlides: false, spaceBetween: 28 },
           }}
           pagination={{ clickable: true, dynamicBullets: true }}
           autoplay={{ delay: 5000, disableOnInteraction: false }}
-          className="pb-16 !overflow-visible"
+          className="pb-16 w-full"
         >
           {testimonials.map((testimonial, i) => (
             <SwiperSlide key={testimonial._id} className="h-auto">
