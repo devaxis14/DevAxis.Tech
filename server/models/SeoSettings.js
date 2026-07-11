@@ -5,40 +5,37 @@ const mongoose = require("mongoose");
  */
 const seoSettingsSchema = new mongoose.Schema(
   {
-    pageTitle: {
+    titleTemplate: {
       type: String,
-      default: "Web Design Company in Kochi, Kerala | DevAxis",
-      maxlength: 70,
+      default: "%s | DevAxis",
     },
-    metaDescription: {
+    defaultTitle: {
       type: String,
-      default:
-        "DevAxis is a leading web design company in Kochi, Kerala. We craft stunning websites, e-commerce stores, and SEO strategies that grow your business.",
-      maxlength: 160,
+      default: "DevAxis Technology",
     },
-    keywords: {
-      type: [String],
-      default: [
-        "web design Kochi",
-        "web development Kerala",
-        "web design company Kochi",
-        "website design Kochi",
-        "ecommerce development Kochi",
-        "SEO services Kochi",
-        "web agency Kerala",
-      ],
+    defaultDescription: {
+      type: String,
+      default: "DevAxis is a leading web design company in Kochi, Kerala.",
+    },
+    defaultKeywords: {
+      type: String,
+      default: "web design Kochi, web development Kerala",
+    },
+    siteName: {
+      type: String,
+      default: "DevAxis Technology",
+    },
+    canonicalUrl: {
+      type: String,
+      default: "",
+    },
+    googleSiteVerification: {
+      type: String,
+      default: "",
     },
     ogImage: {
       type: String,
-      default: null, // Cloudinary URL or null for default
-    },
-    siteUrl: {
-      type: String,
-      default: "https://devaxis.in",
-    },
-    companyName: {
-      type: String,
-      default: "DevAxis",
+      default: "/images/devaxis-logo.png",
     },
   },
   {

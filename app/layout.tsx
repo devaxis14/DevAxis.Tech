@@ -9,13 +9,16 @@ export async function generateMetadata(): Promise<Metadata> {
   // Fetch SEO settings from the Express API
   const seo = await getSeoSettings();
 
-  const siteUrl = seo?.siteUrl || DEFAULT_SITE_URL;
-  const companyName = seo?.companyName || DEFAULT_COMPANY_NAME;
-  const pageTitle = seo?.pageTitle || `Web Design Company in Kochi, Kerala | ${companyName}`;
+  const siteUrl = seo?.canonicalUrl || DEFAULT_SITE_URL;
+  const companyName = seo?.siteName || DEFAULT_COMPANY_NAME;
+  const pageTitle = seo?.defaultTitle || `DevAxis Technology`;
+  const titleTemplate = seo?.titleTemplate || `%s | ${companyName}`;
   const metaDescription =
-    seo?.metaDescription ||
+    seo?.defaultDescription ||
     "DevAxis is a leading web design company in Kochi, Kerala. We craft stunning websites, e-commerce stores, and SEO strategies that grow your business.";
-  const keywords = seo?.keywords || [
+  
+  // Convert comma-separated string back to array if needed, Next.js accepts both
+  const keywords = seo?.defaultKeywords || [
     "web design Kochi",
     "web development Kerala",
     "web design company Kochi",
@@ -24,18 +27,22 @@ export async function generateMetadata(): Promise<Metadata> {
     "SEO services Kochi",
     "web agency Kerala",
   ];
-  const ogImage = seo?.ogImage || `${siteUrl}/images/og-image.png`;
+  const ogImage = seo?.ogImage || `${siteUrl}/images/devaxis-logo.png`;
+  const googleSiteVerification = seo?.googleSiteVerification || undefined;
 
   return {
     metadataBase: new URL(siteUrl),
     title: {
       default: pageTitle,
-      template: `%s | ${companyName}`,
+      template: titleTemplate,
     },
     description: metaDescription,
     keywords: keywords,
     authors: [{ name: companyName }],
     creator: companyName,
+    verification: {
+      google: googleSiteVerification,
+    },
     openGraph: {
       type: "website",
       locale: "en_IN",
