@@ -3,7 +3,7 @@ import { getSeoSettings } from "./lib/api";
 import "./globals.css";
 
 const DEFAULT_COMPANY_NAME = "DevAxis";
-const DEFAULT_SITE_URL = "https://devaxis.in";
+const DEFAULT_SITE_URL = "https://devaxistechnologies.in";
 
 export async function generateMetadata(): Promise<Metadata> {
   // Fetch SEO settings from the Express API
@@ -27,7 +27,10 @@ export async function generateMetadata(): Promise<Metadata> {
     "SEO services Kochi",
     "web agency Kerala",
   ];
-  const ogImage = seo?.ogImage || `${siteUrl}/images/devaxis-logo.png`;
+  const rawOgImage = seo?.ogImage || `/images/devaxis-logo.png`;
+  const ogImage = rawOgImage.startsWith("http")
+    ? rawOgImage
+    : `${siteUrl}${rawOgImage.startsWith("/") ? "" : "/"}${rawOgImage}`;
   const googleSiteVerification = seo?.googleSiteVerification || undefined;
 
   return {
